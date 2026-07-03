@@ -14,7 +14,7 @@ COPY core /app/core
 RUN yarn build
 
 # ---------- Go Builder ----------
-FROM golang:1.24 AS backend
+FROM golang:1.25.1 AS backend
 WORKDIR /app/core
 
 # Install
