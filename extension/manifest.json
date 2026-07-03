@@ -17,7 +17,7 @@
   "host_permissions": [
     "https://www.linkedin.com/*",
     "https://*.linkedin.com/*",
-    "https://timezone.opusco.dev/*"
+    "https://ti-f1b3743dd3ee4c099af856cd45b5ef85.ecs.us-east-1.on.aws/*"
   ],
 
   "content_scripts": [

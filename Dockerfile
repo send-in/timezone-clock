@@ -2,6 +2,10 @@
 FROM node:22-alpine AS frontend
 WORKDIR /app/payment
 
+# ENV
+ARG VITE_RAZORPAY_KEY
+ENV VITE_RAZORPAY_KEY=$VITE_RAZORPAY_KEY
+
 # Install
 COPY payment/package.json payment/yarn.lock ./
 RUN yarn install --frozen-lockfile

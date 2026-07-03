@@ -17,9 +17,9 @@ func Config(db *gorm.DB) http.Handler {
 	controllers := controller.Create(db)
 	router.Use(cors.New(
 		cors.Config{
-			AllowCredentials: true,
+			AllowCredentials:       true,
 			AllowBrowserExtensions: true,
-			
+
 			AllowHeaders: []string{
 				"Origin",
 				"Content-Type",
@@ -27,7 +27,7 @@ func Config(db *gorm.DB) http.Handler {
 				"Authorization",
 			},
 			AllowOrigins: []string{
-				"https://timezone.opusco.dev",
+				"https://ti-f1b3743dd3ee4c099af856cd45b5ef85.ecs.us-east-1.on.aws",
 				"https://www.linkedin.com",
 			},
 			AllowMethods: []string{
@@ -38,6 +38,12 @@ func Config(db *gorm.DB) http.Handler {
 			},
 		},
 	))
+
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"status": "ok",
+		})
+	})
 
 	v1 := router.Group("/api/v1")
 
@@ -51,7 +57,7 @@ func Config(db *gorm.DB) http.Handler {
 
 	// Razorpay Webhook
 	v1.POST("/payments/webhook", controllers.RazorpayWebhook)
-	
+
 	// Protected Routes
 	protected := v1.Group("/")
 	protected.Use(middleware.Authenticate(db))

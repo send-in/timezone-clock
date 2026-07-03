@@ -45,7 +45,7 @@ func (c *Controller) LinkedInCallback(context *gin.Context) {
 	query := context.Request.URL.Query()
 	query.Set("provider", "linkedin-oidc")
 	context.Request.URL.RawQuery = query.Encode()
-	
+
 	user, err := gothic.CompleteUserAuth(
 		context.Writer,
 		context.Request,
@@ -55,7 +55,7 @@ func (c *Controller) LinkedInCallback(context *gin.Context) {
 		logger.Error("LinkedIn authentication failed: %v", err)
 		context.JSON(
 			http.StatusUnauthorized,
-			gin.H{ "error": err.Error() },
+			gin.H{"error": err.Error()},
 		)
 		return
 	}
@@ -71,29 +71,28 @@ func (c *Controller) LinkedInCallback(context *gin.Context) {
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		account = model.Account{
-			Name: user.Name,
-			Email: user.Email,
+			Name:    user.Name,
+			Email:   user.Email,
 			Profile: user.NickName,
 			Picture: user.AvatarURL,
-			Plan: model.Free,
+			Plan:    model.Free,
 		}
 
-		if 	err := c.db.
+		if err := c.db.
 			Create(&account).
-			Error; 
-			err != nil {
+			Error; err != nil {
 			logger.Error("Failed to create account: %v", err)
 			context.JSON(
 				http.StatusInternalServerError,
-				gin.H{ "error": err.Error() },
+				gin.H{"error": err.Error()},
 			)
 			return
 		}
 	} else if err != nil {
-		logger.Error("Failed to lookup account: %v", err )
+		logger.Error("Failed to lookup account: %v", err)
 		context.JSON(
 			http.StatusInternalServerError,
-			gin.H{ "error": err.Error() },
+			gin.H{"error": err.Error()},
 		)
 
 		return
@@ -107,27 +106,26 @@ func (c *Controller) LinkedInCallback(context *gin.Context) {
 	if err != nil {
 		context.JSON(
 			http.StatusInternalServerError,
-			gin.H{ "error": err.Error() },
+			gin.H{"error": err.Error()},
 		)
 		return
 	}
 
 	session.Values["account"] = account.ID.String()
-	if  err := session.Save(context.Request, context.Writer);  
-		err != nil {
+	if err := session.Save(context.Request, context.Writer); err != nil {
 		context.JSON(
 			http.StatusInternalServerError,
-			gin.H{ "error": err.Error() },
+			gin.H{"error": err.Error()},
 		)
 		return
 	}
 
 	http.SetCookie(
-		context.Writer, 
+		context.Writer,
 		&http.Cookie{
-			Name:  "sendin_access",
-			Value: "true",
-			Path:  "/",
+			Name:     "sendin_access",
+			Value:    "true",
+			Path:     "/",
 			MaxAge:   86400 * 30,
 			HttpOnly: false,
 		},
@@ -135,10 +133,9 @@ func (c *Controller) LinkedInCallback(context *gin.Context) {
 
 	context.Redirect(
 		http.StatusTemporaryRedirect,
-		"https://timezone.opusco.dev",
+		"https://ti-f1b3743dd3ee4c099af856cd45b5ef85.ecs.us-east-1.on.aws",
 	)
 }
-
 
 // Logout godoc
 //

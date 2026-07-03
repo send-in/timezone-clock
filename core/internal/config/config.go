@@ -19,7 +19,7 @@ func Load() (*Config, error) {
 			Passkey: GetEnv("PASSKEY", ""),
 		},
 		Database: DatabaseConfig{
-			Name:     GetEnv("DB_NAME", "timezone"),
+			Name:     GetEnv("DB_NAME", "postgres"),
 			Username: GetEnv("DB_USER", "postgres"),
 			Password: GetEnv("DB_PASSWORD", "password"),
 			Host:     GetEnv("DB_HOST", "localhost"),
@@ -33,12 +33,13 @@ func Load() (*Config, error) {
 			EncryptionSecret: GetEnv("ENCRYPTION_SECRET", ""),
 			CallbackURL: GetEnv(
 				"LINKEDIN_CALLBACK_URL",
-				"https://timezone.opusco.dev/api/v1/auth/linkedin/callback",
+				"https://ti-f1b3743dd3ee4c099af856cd45b5ef85.ecs.us-east-1.on.aws/api/v1/auth/linkedin/callback",
 			),
 		},
 		Razorpay: RazorpayConfig{
 			KeyID:     GetEnv("RAZORPAY_KEY_ID", ""),
 			KeySecret: GetEnv("RAZORPAY_KEY_SECRET", ""),
+			WebhookSecret: GetEnv("RAZORPAY_WEBHOOK_SECRET", ""),
 		},
 	}, nil
 }
