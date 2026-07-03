@@ -1,0 +1,378 @@
+type ClassValue = string | number | boolean | undefined | null | ClassValue[]
+
+const FORMAT_BOLD = 1
+const FORMAT_ITALIC = 2
+const FORMAT_STRIKETHROUGH = 4
+const FORMAT_UNDERLINE = 8
+
+type LexicalNode = {
+	type: string
+	children?: LexicalNode[]
+	text?: string
+	format?: number
+	tag?: string
+	listType?: "number" | "bullet"
+	url?: string
+}
+
+export const cn = (...inputs: ClassValue[]): string => {
+  return inputs
+    .flat()
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+export type IClassValue = string | number | boolean | undefined | null | IClassValue[]
+
+export const capitalize = (
+    str: string
+) => {
+
+    if (
+        !str ||
+        typeof str !== "string"
+    )
+        return ""
+
+    const res = str
+        .split(/[-_]/g)
+        .join(" ")
+
+    return (
+        res.charAt(0)
+            .toUpperCase() +
+        res.slice(1)
+    )
+}
+
+export const createDateInTimezone = (
+    year: number,
+    month: number,
+    day: number,
+    hour: number,
+    timezone: string,
+    minute: number = 0,
+): Date => {
+    const approxMs = Date.UTC(year, month - 1, day, hour, minute, 0)
+ 
+    const parts = Object.fromEntries(
+        new Intl.DateTimeFormat("en-US", {
+            timeZone: timezone,
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: false,
+        })
+            .formatToParts(new Date(approxMs))
+            .filter(p => p.type !== "literal")
+            .map(p => [p.type, p.value]),
+    )
+ 
+    const tzMs = Date.UTC(
+        Number(parts.year),
+        Number(parts.month) - 1,
+        Number(parts.day),
+        Number(parts.hour),
+        Number(parts.minute),
+        Number(parts.second),
+    )
+ 
+    return new Date(2 * approxMs - tzMs)
+}
+
+export const formatInTimezone = (
+    date: Date,
+    timezone: string,
+) => ({
+    date: date.toLocaleDateString("en-US", {
+        timeZone: timezone,
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+    }),
+    time: date.toLocaleTimeString("en-US", {
+        timeZone: timezone,
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+    }),
+})
+
+export const formatDateTimeLocal = (
+    value?: string,
+) => {
+    if (!value)
+		return {
+    date: "",
+			time: "",
+		}
+
+	const [datePart, timePart] =
+		value.split("T")
+
+	const [year, month, day] =
+		datePart
+			.split("-").
+			map(Number)
+
+	const date = new Date(
+		year,
+		month - 1,
+		day,
+	)
+
+	const time = new Date(
+		`2000-01-01T${timePart}`,
+	)
+
+	return {
+		date: date.toLocaleDateString(
+			"en-US",
+			{
+				weekday: "short",
+				month: "short",
+				day: "numeric",
+			},
+		),
+
+		time: time.toLocaleTimeString(
+			"en-US",
+			{
+				hour: "numeric",
+				minute: "2-digit",
+				hour12: true,
+			},
+		),
+	}
+}
+
+export const parseLexicalHTML = (
+	value?: string,
+): string => {
+	if (!value) return ""
+
+	try {
+		const editor = JSON.parse(value)
+
+		const render = (node: LexicalNode): string => {
+			const children = (node.children ?? [])
+				.map(render)
+				.join("")
+
+			switch (node.type) {
+				case "root":
+					return children
+
+				case "paragraph":
+					return `<p>${children}</p>`
+
+				case "heading": {
+					const tag = node.tag ?? "1"
+					return `<h${tag}>${children}</h${tag}>`
+				}
+
+				case "list": {
+					const tag =
+						node.listType === "number"
+							? "ol"
+							: "ul"
+
+					return `<${tag}>${children}</${tag}>`
+				}
+
+				case "listitem":
+					return `<li>${children}</li>`
+
+				case "linebreak":
+					return "<br />"
+
+				case "link":
+					return `
+						<a
+							href="${node.url}"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							${children}
+						</a>
+					`
+
+				case "text": {
+					let text = node.text ?? ""
+
+					if (node.format && node.format & FORMAT_BOLD)
+						text = `<strong>${text}</strong>`
+
+					if (node.format && node.format & FORMAT_ITALIC)
+						text = `<em>${text}</em>`
+                    
+                    if (node.format && node.format & FORMAT_STRIKETHROUGH)
+                        text = `<s>${text}</s>`
+
+					if (node.format && node.format & FORMAT_UNDERLINE)
+						text = `<u>${text}</u>`
+
+					if (node.format && node.format & 16)
+						text = `<code>${text}</code>`
+
+					if (node.format && node.format & 32)
+						text = `<sub>${text}</sub>`
+
+					if (node.format && node.format & 64)
+						text = `<sup>${text}</sup>`
+
+					return text
+				}
+
+				default:
+					return children
+			}
+		}
+
+		return render(editor.root)
+	} catch {
+		return value
+			.split("\n")
+			.map(line => `<p>${line}</p>`)
+			.join("")
+	}
+}
+
+export const parseLexical = (
+    value?: string,
+): string => {
+    if (!value)
+        return ""
+
+    try {
+        const document = JSON.parse(value)
+        return (document.root.children ?? [])
+            .map(renderBlock)
+            .join("\n")
+            .trim()
+    } catch {
+        return value
+    }
+}
+
+const renderBlock = (node: any): string => {
+    switch (node.type) {
+        case "paragraph":
+            return renderInline(node)
+
+        case "list":
+            return (node.children ?? [])
+                .map((item: any, index: number) => {
+                    const text = renderInline(item).trim()
+
+                    if (!text)
+                        return ""
+
+                    return node.listType === "number"
+                        ? `${index + 1}. ${text}`
+                        : `• ${text}`
+                })
+                .filter(Boolean)
+                .join("\n")
+
+        default:
+            return renderInline(node)
+    }
+}
+
+const renderInline = (node: any): string => {
+    switch (node.type) {
+        case "text":
+            return applyFormatting(
+                node.text ?? "",
+                node.format ?? 0,
+            )
+
+        case "linebreak":
+            return "\n"
+
+        default:
+            return (node.children ?? [])
+                .map(renderInline)
+                .join("")
+    }
+}
+
+const applyFormatting = (
+    text: string,
+    format: number,
+): string => {
+    let result = text
+
+    if (format & FORMAT_BOLD)
+        result = toBold(result)
+
+    if (format & FORMAT_ITALIC)
+        result = toItalic(result)
+
+    if (format & FORMAT_UNDERLINE)
+        result = toUnderline(result)
+
+    if (format & FORMAT_STRIKETHROUGH)
+        result = toStrike(result)
+
+    return result
+}
+
+const toBold = (text: string) =>
+    [...text]
+        .map(char => {
+            const code = char.charCodeAt(0)
+
+            if (code >= 48 && code <= 57)
+                return String.fromCodePoint(
+                    0x1D7CE + (code - 48),
+                )
+
+            if (code >= 65 && code <= 90)
+                return String.fromCodePoint(
+                    0x1D5D4 + (code - 65),
+                )
+
+            if (code >= 97 && code <= 122)
+                return String.fromCodePoint(
+                    0x1D5EE + (code - 97),
+                )
+
+            return char
+        })
+        .join("")
+
+const toItalic = (text: string) =>
+    [...text]
+        .map(char => {
+            const code = char.charCodeAt(0)
+
+            if (code >= 65 && code <= 90)
+                return String.fromCodePoint(
+                    0x1D608 + (code - 65),
+                )
+
+            if (code >= 97 && code <= 122)
+                return String.fromCodePoint(
+                    0x1D622 + (code - 97),
+                )
+
+            return char
+        })
+        .join("")
+
+const toUnderline = (text: string) =>
+    [...text]
+        .map(char => `${char}\u0332`)
+        .join("")
+
+const toStrike = (text: string) =>
+    [...text]
+        .map(char => `${char}\u0336`)
+        .join("")

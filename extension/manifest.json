@@ -1,0 +1,55 @@
+{
+  "name": "Timezone Clock",
+  "description": "Get clock time of your connections on linkedin",
+  "version": "1.0.0",
+  "manifest_version": 3,
+
+  "action": {
+    "default_title": "Timezone Clock",
+    "default_popup": "index.html"
+  },
+
+  "permissions": [
+    "cookies",
+    "scripting"
+  ],
+
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://*.linkedin.com/*",
+    "http://localhost:8000/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/in/*"],
+      "js": ["timezone.js"]
+    }
+  ],
+
+  "icons": {
+    "192": "logo192.png",
+    "512": "logo512.png"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*",
+        "manifest.json"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
