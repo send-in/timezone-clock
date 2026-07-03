@@ -1,0 +1,16 @@
+.git
+.github
+.vscode
+
+bin
+tmp
+
+.air.toml
+
+.env
+
+node_modules
+web/node_modules
+
+Dockerfile
+docker-compose.yml

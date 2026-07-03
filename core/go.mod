@@ -70,6 +70,7 @@ require (
 
 require (
 	github.com/gin-contrib/cors v1.7.7
+	github.com/gin-gonic/contrib v0.0.0-20260101091603-d12f07a9136b
 	github.com/gin-gonic/gin v1.12.0
 	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/google/uuid v1.6.0

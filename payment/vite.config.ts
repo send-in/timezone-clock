@@ -17,5 +17,10 @@ export default defineConfig({
     server: {
         port: 3000,
     },
+    build: {
+        outDir: path.resolve(__dirname, "../core/web"),
+        emptyOutDir: true,
+    },
+
 })
  

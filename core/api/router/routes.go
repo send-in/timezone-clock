@@ -7,13 +7,9 @@ import (
 	"net/http"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-
-	_ "core/docs"
-
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Config(db *gorm.DB) http.Handler {
@@ -31,7 +27,7 @@ func Config(db *gorm.DB) http.Handler {
 				"Authorization",
 			},
 			AllowOrigins: []string{
-				"http://localhost:3000",
+				"http://localhost:8000",
 				"https://www.linkedin.com",
 			},
 			AllowMethods: []string{
@@ -43,27 +39,7 @@ func Config(db *gorm.DB) http.Handler {
 		},
 	))
 
-	router.GET(
-		"/swagger/*any",
-		ginSwagger.WrapHandler(
-			swaggerFiles.Handler,
-		),
-	)
-
 	v1 := router.Group("/api/v1")
-
-	// Health
-	v1.GET(
-		"/health",
-		func(c *gin.Context) {
-			c.JSON(
-				http.StatusOK,
-				gin.H{
-					"status": "healthy",
-				},
-			)
-		},
-	)
 
 	// Public Routes
 	auth := v1.Group("/auth")
@@ -85,6 +61,10 @@ func Config(db *gorm.DB) http.Handler {
 		protected.GET("/payments/:id", controllers.GetPayment)
 		protected.POST("/payments", controllers.CreatePayment)
 	}
+
+	router.Use(
+		static.Serve("/", static.LocalFile("./web", true)),
+	)
 
 	return router
 }

@@ -2,6 +2,7 @@ package controller
 
 import (
 	middleware "core/api/middleware"
+	
 	"net/http"
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +14,7 @@ import (
 //	@Tags			account
 //	@Produce		json
 //	@Security		CookieAuth
-//	@Success		200	{object}	model.Account
+//	@Success		200	{object}
 //	@Failure		401	{object}	map[string]interface{}
 //	@Router			/account [get]
 func (c *Controller) GetAccount(context *gin.Context) {

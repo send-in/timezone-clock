@@ -1,12 +1,18 @@
 package config
 
 import (
+	logger "core/pkg/log"
 	"fmt"
+
 	"github.com/joho/godotenv"
 )
 
 func Load() (*Config, error) {
-	godotenv.Load(".env")
+	if 	err := godotenv.Load(".env");
+		err != nil {
+		logger.Warning("%s",err)
+	}
+
 	return &Config{
 		Server: ServerConfig{
 			Port:    ":" + GetEnv("PORT", "8000"),
@@ -62,11 +68,12 @@ func (cfg *DatabaseConfig) GetAdminDSN() string {
 
 func (cfg *DatabaseConfig) GetMigrationDSN() string {
 	return fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.Username,
 		cfg.Password,
 		cfg.Host,
 		cfg.Port,
 		cfg.Name,
+		cfg.SSL,
 	)
 }

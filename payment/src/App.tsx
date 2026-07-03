@@ -17,7 +17,7 @@ import { getProfile, IAccount } from "@/lib"
 
 const Dashboard = () => {
     const [loading, setLoading] = useState(true)
-    const [account, setAccount] = useState<IAccount | null>(null)
+    const [account, setAccount] = useState<IAccount | undefined>()
 
     useEffect(() => {
         (async () => {
@@ -58,7 +58,7 @@ const Dashboard = () => {
                             text-3xl font-semibold
                             text-charcoal-100
                         ">
-                            Timezone for LinkedIn
+                            Local Clock for LinkedIn
                         </h1>
 
                         <p className="
@@ -124,6 +124,7 @@ const Dashboard = () => {
 
                         <PurchaseButton
                             isPro={account?.plan === "pro"}
+                            isAccount={Boolean(account)}
                             onSuccess={() =>
                                 window.location.reload()
                             }

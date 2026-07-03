@@ -1,4 +1,4 @@
-export const _ORIGIN_URL = "http://localhost:3000"
+export const _ORIGIN_URL = "http://localhost:8000"
 export const _BASE_URL = "http://localhost:8000"
 export const _APP_URL = "https://www.sendin.com"
 

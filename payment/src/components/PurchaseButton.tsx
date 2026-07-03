@@ -21,11 +21,13 @@ import {
 interface IPurchaseButton {
     onSuccess?: () => void,
     isPro?: boolean
+    isAccount?: boolean
 }
 
 export const PurchaseButton = ({
     onSuccess,
     isPro = false,
+    isAccount = false,
 }: IPurchaseButton) => {
     const [error, setError] = useState<string>()
     const [loading, setLoading] = useState(false)
@@ -144,7 +146,7 @@ export const PurchaseButton = ({
                 variant="primary"
                 fullWidth
                 onClick={handlePurchase}
-                disabled={isPro}
+                disabled={isPro || !isAccount}
                 loading={
                     loading ||
                     processing
