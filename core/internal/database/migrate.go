@@ -12,7 +12,7 @@ import (
 func Migrate(cfg *config.DatabaseConfig) error {
 	dsn := cfg.GetMigrationDSN()
 	migration, err := migrate.New(
-		"file://internal/migrations",
+		"file:///internal/migrations",
 		dsn,
 	)
 	

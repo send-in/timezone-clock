@@ -27,7 +27,7 @@ func Config(db *gorm.DB) http.Handler {
 				"Authorization",
 			},
 			AllowOrigins: []string{
-				"http://localhost:8000",
+				"https://timezone.opusco.dev",
 				"https://www.linkedin.com",
 			},
 			AllowMethods: []string{

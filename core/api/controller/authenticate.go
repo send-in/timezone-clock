@@ -135,7 +135,7 @@ func (c *Controller) LinkedInCallback(context *gin.Context) {
 
 	context.Redirect(
 		http.StatusTemporaryRedirect,
-		"http://localhost:3000",
+		"https://timezone.opusco.dev",
 	)
 }
 

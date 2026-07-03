@@ -1,5 +1,5 @@
-export const _ORIGIN_URL = "http://localhost:8000"
-export const _BASE_URL = "http://localhost:8000"
+export const _ORIGIN_URL = "https://timezone.opusco.dev"
+export const _BASE_URL = "https://timezone.opusco.dev"
 export const _APP_URL = "https://www.sendin.com"
 
 export const _AUTH_KEY = "sendin_auth"

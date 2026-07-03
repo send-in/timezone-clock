@@ -33,7 +33,7 @@ func Load() (*Config, error) {
 			EncryptionSecret: GetEnv("ENCRYPTION_SECRET", ""),
 			CallbackURL: GetEnv(
 				"LINKEDIN_CALLBACK_URL",
-				"http://localhost:8000/api/v1/auth/linkedin/callback",
+				"https://timezone.opusco.dev/api/v1/auth/linkedin/callback",
 			),
 		},
 		Razorpay: RazorpayConfig{
