@@ -2,10 +2,6 @@
 FROM node:22-alpine AS frontend
 WORKDIR /app/payment
 
-# ENV
-ARG VITE_RAZORPAY_KEY
-ENV VITE_RAZORPAY_KEY=$VITE_RAZORPAY_KEY
-
 # Install
 COPY payment/package.json payment/yarn.lock ./
 RUN yarn install --frozen-lockfile
@@ -15,7 +11,7 @@ COPY payment .
 COPY core /app/core
 
 # Build
-RUN yarn build
+RUN --mount=type=secret,id=RAZORPAY_KEY,env=VITE_RAZORPAY_KEY_ID yarn build
 
 # ---------- Go Builder ----------
 FROM golang:1.25.1 AS backend

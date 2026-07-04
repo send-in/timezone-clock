@@ -27,12 +27,14 @@ jobs:
 
     - name: Build, Tag, and Push Image to ECR
       env:
+        DOCKER_BUILDKIT: 1
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+        VITE_RAZORPAY_KEY_ID: ${{ secrets.VITE_RAZORPAY_KEY_ID }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
         # Build the specific Dockerfile located in the /core directory
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build --secret id=RAZORPAY_KEY,env=VITE_RAZORPAY_KEY_ID -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         
         # Push the built image to your repository
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
