@@ -3,52 +3,73 @@ import { useLocation } from "react-router-dom"
 export const Footer = () => {
     const { pathname } = useLocation()
 
-    return (
-        <footer className="
-            absolute bottom-10 px-12
-            w-full flex justify-between
-            items-end text-grey-200
-        ">
+    const links = (
+        <section 
+            data-path={pathname}
+            className="space-x-4 text-sm group"
+        >
             <a
-                className="text-grey-300 hover:text-blue-200 smooth" 
-                href="mailto:magnum@opusco.dev">
-                magnum@opusco.dev
+                href="/"
+                className="
+                    text-blue-100 hover:text-blue-200 
+                    smooth group-data-[path=/]:text-blue-200 
+                " 
+            >
+                Subscribe
             </a>
 
-            <section 
-                data-path={pathname}
-                className="space-x-4 text-sm group"
+            <a
+                href="/privacy-policy"
+                className="
+                    hover:text-charcoal-200 smooth
+                    group-data-[path=/privacy-policy]:text-black
+                " 
             >
-                <a
-                    href="/"
-                    className="
-                        text-blue-100 hover:text-blue-200 
-                        smooth group-data-[path=/]:text-blue-200 
-                    " 
-                >
-                    Subscribe
-                </a>
+                Privacy Policy
+            </a>
 
-                <a
-                    href="/privacy-policy"
-                    className="
-                        hover:text-charcoal-200 smooth
-                        group-data-[path=/privacy-policy]:text-black
-                    " 
-                >
-                    Privacy Policy
-                </a>
+            <a
+                href="/terms"
+                className="
+                    hover:text-charcoal-200 smooth
+                    group-data-[path=/terms]:text-black
+                " 
+            >
+                Terms Conditions
+            </a>
+        </section>
+    )
 
+    return (
+        <footer className="
+            mobile:absolute 
+            mobile:bottom-10 
+
+            px-12 w-full flex justify-between
+            items-end text-grey-200
+            
+            max-mobile:relative
+            max-mobile:flex-col
+            max-mobile:items-start
+            max-mobile:bottom-auto
+            max-mobile:px-0
+            max-mobile:gap-4
+
+        ">
+            <section>
                 <a
-                    href="/terms"
-                    className="
-                        hover:text-charcoal-200 smooth
-                        group-data-[path=/terms]:text-black
-                    " 
-                >
-                    Terms Conditions
+                    className="text-grey-300 hover:text-blue-200 smooth" 
+                    href="mailto:magnum@opusco.dev">
+                    magnum@opusco.dev
                 </a>
+                <aside className="mobile:hidden">
+                    {links}
+                </aside>
             </section>
+
+            <aside className="max-mobile:hidden">
+                {links}
+            </aside>
 
             <section>
                 <p>

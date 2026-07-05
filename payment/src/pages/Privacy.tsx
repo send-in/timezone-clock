@@ -6,8 +6,7 @@ export const Privacy = () => {
                 rounded-3xl border border-grey-100
                 bg-white shadow-sm
                 p-10 space-y-8
-                mb-10
-
+                
                 max-mobile:rounded-2xl
                 max-mobile:p-6
                 max-mobile:space-y-6
@@ -33,6 +32,7 @@ export const Privacy = () => {
                     space-y-4
                     text-charcoal-100
                     leading-7
+
                     max-mobile:text-sm
                     max-mobile:leading-6
                 "

@@ -42,6 +42,9 @@ export const Dashboard = () => {
         >
             <aside className="
                 flex items-center gap-3
+                max-mobile:flex-col
+                max-mobile:items-start
+                max-mobile:gap-10
             ">
                 <Logo
                     size={42}

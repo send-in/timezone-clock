@@ -23,6 +23,9 @@ const App = () => {
                     h-full w-full bg-bluewash
                     flex flex-col items-center rounded-xl
                     justify-center p-6
+
+                    max-mobile:h-max
+                    max-mobile:gap-12
                 ">
                     <Routes>
                         <Route path="/" element={<Dashboard />} />
