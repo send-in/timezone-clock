@@ -1,6 +1,5 @@
 export const _ORIGIN_URL = "https://ti-f1b3743dd3ee4c099af856cd45b5ef85.ecs.us-east-1.on.aws"
 export const _BASE_URL = "https://ti-f1b3743dd3ee4c099af856cd45b5ef85.ecs.us-east-1.on.aws"
-export const _APP_URL = "https://www.sendin.com"
 
 export const _AUTH_KEY = "sendin_auth"
 

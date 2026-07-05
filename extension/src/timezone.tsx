@@ -37,51 +37,31 @@ const startObserver = () => {
     const observer = new MutationObserver(() => {
         if (document.getElementById(HOST_ID))
             return
-    
-        const messageLinks = Array.from(
-            document.querySelectorAll<HTMLAnchorElement>(
-                'a[href*="/messaging/compose/"]'
-            )
+
+        const contact = Array.from(
+            document.querySelectorAll<HTMLAnchorElement>("a")
+        ).find(a =>
+            a.textContent?.trim().toLowerCase() === "contact info"
         )
+
+        if (!contact)
+            return null
+
+        const container = contact.parentElement?.parentElement?.parentElement
+        if (!container)
+            return null
     
-        const connectLinks = Array.from(
-            document.querySelectorAll<HTMLAnchorElement>(
-                'a[href*="/preload/custom-invite"]'
-            )
-        )
-    
-        const followLinks = Array.from(
-            document.querySelectorAll<HTMLButtonElement>(
-                'button[aria-label*="Follow"]'
-            )
-        )
-    
-        const links = 
-            connectLinks.length > 0 ? 
-                connectLinks : 
-                messageLinks.length > 0 ? 
-                    messageLinks : 
-                    followLinks
-    
-        if (links.length < 2) 
-            return
-    
-        const linkContainer = links.at(1)
-        .closest<HTMLElement>("[data-display-contents='true']")
-        
-        const actions = 
-            linkContainer?.parentElement?.parentElement?.parentElement
             
         const { location } = parseProfile()
         const timezone = inferTimezone(location)
     
-        if(actions && timezone){
+        if(container && timezone){
             const host = document.createElement("div")
             host.id = HOST_ID
         
             host.setAttribute("data-display-contents", "true")
             host.style.marginTop = "10px"
-            actions.append(host)
+            container.append(host)
         
             const shadow = host.attachShadow({ mode: "open" })
             const style = document.createElement("style")

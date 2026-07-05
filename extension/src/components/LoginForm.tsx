@@ -1,6 +1,6 @@
 // #region imports
 import { Button } from "@/base"
-import { _APP_URL } from "@/constants"
+import { _ORIGIN_URL } from "@/constants"
 import { useAuthorized } from "@/hooks"
 import { redirect } from "react-router-dom"
 // #endregion
@@ -42,9 +42,9 @@ export const LoginForm = () => {
                         variant="inverted"
                         className="py-1!"
                         textClassName="font-semibold"
-                        onClick={()=>{
-                            chrome.tabs.create({url: `${_APP_URL}/auth`})
-                        }}
+                        onClick={()=>
+                            chrome.tabs.create({url: `${_ORIGIN_URL}`})
+                        }
                     >
                         Login
                     </Button>
