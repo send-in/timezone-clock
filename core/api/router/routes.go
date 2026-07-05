@@ -71,6 +71,10 @@ func Config(db *gorm.DB) http.Handler {
 	router.Use(
 		static.Serve("/", static.LocalFile("./web", true)),
 	)
+	
+	router.NoRoute(func(c *gin.Context) {
+		c.File("./web/index.html")
+	})
 
 	return router
 }
