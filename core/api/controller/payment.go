@@ -87,7 +87,7 @@ func (c *Controller) GetPayment(context *gin.Context) {
 func (c *Controller) CreatePayment(context *gin.Context) {
 	account := middleware.Account(context)
 	amount := int64(
-		9.99 *
+		1.99 *
 		100,
 	)
 

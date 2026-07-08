@@ -9,10 +9,7 @@
     "default_popup": "index.html"
   },
 
-  "permissions": [
-    "cookies",
-    "scripting"
-  ],
+  "permissions": ["cookies"],
 
   "host_permissions": [
     "https://www.linkedin.com/*",

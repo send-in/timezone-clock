@@ -157,7 +157,7 @@ export const PurchaseButton = ({
                         : "Purchasing"
                 }
             >
-                Buy Lifetime • $9.99
+                Buy Lifetime • $1.99
             </Button>
         </>
     )
